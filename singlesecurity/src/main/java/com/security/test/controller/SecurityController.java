@@ -1,5 +1,6 @@
 package com.security.test.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,6 +22,18 @@ public class SecurityController {
     @RequestMapping("/helloworld")
     public String helloworld(){
         return "helloworld";
+    }
+
+    @RequestMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    public String user(){
+        return "user";
+    }
+
+    @RequestMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String admin(){
+        return "admin";
     }
 
     @RequestMapping("/fail")
