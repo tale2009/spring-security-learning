@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>singlesecurity</module>
+        <module>oauth2</module>
     </modules>
     <packaging>pom</packaging>
     <parent>
@@ -16,5 +17,16 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.4.5.RELEASE</version>
     </parent>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Brixton.SR5</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
 
