@@ -1,0 +1,16 @@
+server:
+  port: 1113
+  contextPath: /oauthserver
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+  application:
+    name: oauthserver
+  session:
+    store-type: hash_map
+
