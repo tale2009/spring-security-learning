@@ -14,3 +14,5 @@ spring:
   session:
     store-type: hash_map
 
+keygenerator:
+  currentgenerator: custom

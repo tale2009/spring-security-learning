@@ -1,7 +1,10 @@
 package com.security.cloudtest.config;
 
 import com.security.cloudtest.authenticationprovider.CustomProvider;
+import com.security.cloudtest.keygenerator.CustomKeyGenerator;
 import com.security.cloudtest.userdetailservice.CustomUserDetialService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,7 +25,8 @@ import java.util.List;
 @Configuration
 @EnableAuthorizationServer //提供/oauth/authorize,/oauth/token,/oauth/check_token,/oauth/confirm_access,/oauth/error
 public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
-
+    @Value("${keygenerator.currentgenerator}")
+    private String currentkey;
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
         oauthServer
@@ -48,9 +52,19 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
+    @ConditionalOnProperty(prefix="keygenerator",name="currentgenerator",havingValue = "define")
     public InMemoryTokenStore inMemoryTokenStore()
     {
         return new InMemoryTokenStore();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix="keygenerator",name="currentgenerator",havingValue = "custom")
+    public InMemoryTokenStore customTokenStore()
+    {
+        InMemoryTokenStore inMemoryTokenStore = new InMemoryTokenStore();
+        inMemoryTokenStore.setAuthenticationKeyGenerator(new CustomKeyGenerator());
+        return inMemoryTokenStore;
     }
 
 
@@ -58,7 +72,10 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.authenticationManager(customAuthenticationManager());
         endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET,HttpMethod.POST);
-        endpoints.tokenStore(inMemoryTokenStore());
+        if("define".equals(currentkey))
+            endpoints.tokenStore(inMemoryTokenStore());
+        else
+            endpoints.tokenStore(customTokenStore());
     }
 
     @Override
