@@ -1,0 +1,16 @@
+server:
+  port: 1114
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+
+spring:
+  application:
+    name: apioneserver
+  redis:
+    host: #redisip
+    password:
+    database: 0
+    port: 6379

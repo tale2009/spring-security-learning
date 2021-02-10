@@ -1,0 +1,44 @@
+server:
+  port: 1112
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:1111/eureka/
+
+spring:
+  application:
+    name: gatewayserver
+  session:
+    store-type: hash_map
+zuul:
+  sensitiveHeaders:
+  add-proxy-headers: true
+  routes:
+    oauthserver:
+      path: /oauthserver/**
+      stripPrefix: false
+      serviceId: oauthserver
+    apioneserver:
+      path: /api/one/**
+      stripPrefix: false
+      serviceId: apioneserver
+
+security:
+  oauth2:
+    client:
+      #配置自动访问相关路径
+      clientId: demoApp
+      clientSecret: demoAppSecret
+      accessTokenUri: http://localcloudoauth:8080/oauthserver/oauth/token
+      userAuthorizationUri: http://localcloudoauth:8080/oauthserver/oauth/authorize
+      preEstablishedRedirectUri: http://localcloudoauth:8080/api/sso #oauth2restemplate发现没有access的时候需要跳转的地方
+      useCurrentUri: false
+    resource:
+      #获取已登录权限的配置
+      id: resourece
+      loadBalanced: true
+      userInfoUri: http://oauthserver/oauthserver/userinfo
+      preferTokenInfo: false
